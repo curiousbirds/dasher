@@ -111,7 +111,15 @@ dasher_editor_external_toggle_direct_mode(DasherEditor *pSelf, bool direct) {
 void
 dasher_editor_external_output(DasherEditor *pSelf, const char *szText, int iOffset /* unused */) {
   if (!initSPI()) return;
-  atspi_generate_keyboard_event(0, szText, ATSPI_KEY_STRING, NULL);
+  char buf[]={' ', 0};
+  for (int i = 0;i<strlen(szText);i++) {
+    if (szText[i]!='\n') {
+        buf[0]=szText[i];
+        atspi_generate_keyboard_event(0, buf, ATSPI_KEY_STRING, NULL);
+    } else {
+        atspi_generate_keyboard_event(XK_Return, NULL, ATSPI_KEY_SYM, NULL);
+    }
+  }
 }
 
 void
